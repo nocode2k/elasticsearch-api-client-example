@@ -1,2 +1,2 @@
 # elasticsearch-api-client-example
-elasticsearch 8.x api client example
+Elasticsearch 8,x Java API Client example
