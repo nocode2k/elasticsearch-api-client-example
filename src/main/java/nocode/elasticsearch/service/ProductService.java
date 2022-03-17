@@ -7,7 +7,10 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import nocode.elasticsearch.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,13 +19,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService {
-    private final String index;
+
+    @Value("${config.indexName}")
+    private String indexName;
     private final ElasticsearchClient client;
 
     public Product findById(String id) throws IOException {
-        final GetResponse<Product> getResponse = client.get(builder -> builder.index(index).id(id), Product.class);
+        final GetResponse<Product> getResponse = client.get(builder -> builder.index(indexName).id(id), Product.class);
         Product product = getResponse.source();
         product.setId(id);
         return product;
@@ -67,7 +72,7 @@ public class ProductService {
     public void save(List<Product> products) throws IOException {
         final BulkResponse response = client.bulk(builder -> {
             for (Product product : products) {
-                builder.index(index)
+                builder.index(indexName)
                         .operations(ob -> {
                             if (product.getId() != null) {
                                 ob.index(ib -> ib.document(product).id(product.getId()));
