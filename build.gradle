@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter:2.6.4'
 	implementation 'co.elastic.clients:elasticsearch-java:8.1.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
+	implementation 'org.glassfish:jakarta.json:2.0.1'
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.4'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
