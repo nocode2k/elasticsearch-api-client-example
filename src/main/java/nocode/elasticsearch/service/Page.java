@@ -19,7 +19,7 @@ public class Page<T> {
         this.size = size;
     }
 
-    List<T> get() {
+    public List<T> get() {
         return Collections.unmodifiableList(products);
     }
 

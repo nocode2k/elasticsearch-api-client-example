@@ -24,12 +24,16 @@ public class ProductService {
 
     @Value("${config.indexName}")
     private String indexName;
-    private final ElasticsearchClient client;
+    private final ElasticsearchClient elasticsearchClient;
 
     public Product findById(String id) throws IOException {
-        final GetResponse<Product> getResponse = client.get(builder -> builder.index(indexName).id(id), Product.class);
-        Product product = getResponse.source();
-        product.setId(id);
+        final GetResponse<Product> getResponse = elasticsearchClient.get(builder -> builder.index(indexName).id(id), Product.class);
+        Product product =null;
+        if(getResponse.found()) {
+            product = getResponse.source();
+            assert product != null;
+            product.setId(id);
+        }
         return product;
     }
 
@@ -44,7 +48,7 @@ public class ProductService {
     }
 
     private Page<Product> createPage(SearchRequest searchRequest, String input) throws IOException {
-        final SearchResponse<Product> response = client.search(searchRequest, Product.class);
+        final SearchResponse<Product> response = elasticsearchClient.search(searchRequest, Product.class);
         if (response.hits().total().value() == 0) {
             return Page.EMPTY;
         }
@@ -70,21 +74,12 @@ public class ProductService {
     }
 
     public void save(List<Product> products) throws IOException {
-        final BulkResponse response = client.bulk(builder -> {
+        final BulkResponse response = elasticsearchClient.bulk(builder -> {
             for (Product product : products) {
-                builder.index(indexName)
-                        .operations(ob -> {
-                            if (product.getId() != null) {
-                                ob.index(ib -> ib.document(product).id(product.getId()));
-                            } else {
-                                ob.index(ib -> ib.document(product));
-                            }
-                            return ob;
-                        });
+                builder.operations(ob -> ob.create(cb -> cb.index(indexName).document(product)));
             }
             return builder;
         });
-
         final int size = products.size();
         for (int i = 0; i < size; i++) {
             products.get(i).setId(response.items().get(i).id());

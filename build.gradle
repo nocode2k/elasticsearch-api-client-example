@@ -21,10 +21,19 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter:2.6.4'
 	implementation 'co.elastic.clients:elasticsearch-java:8.1.0'
+	implementation 'jakarta.json:jakarta.json-api:2.0.1'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
 	implementation 'org.glassfish:jakarta.json:2.0.1'
-	compileOnly 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.4'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.4'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.4'
+	testImplementation 'org.assertj:assertj-core:3.22.0'
+	testImplementation 'org.testcontainers:elasticsearch:1.16.3'
+	testImplementation 'org.testcontainers:junit-jupiter:1.16.3'
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
