@@ -10,8 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,12 +36,17 @@ public class ProductController {
     @PostMapping(value="/save")
     public ResponseEntity<Product> save() throws IOException {
         Product product = new Product();
-        product.setId("1");
-        product.setName("Name of product");
-        product.setDescription("Description of product");
-        product.setPrice(1.2);
-        product.setStockAvailable(10);
-        productService.save(product);
+        List<Product> list = new ArrayList<>();
+        for(int i=1; i <= 5; i++) {
+            product = new Product();
+            product.setId(""+i);
+            product.setName("Name "+i+" of product");
+            product.setDescription("Description of product");
+            product.setPrice(1.2);
+            product.setStockAvailable(10);
+            list.add(product);
+        }
+        productService.save(list);
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(product, headers, HttpStatus.OK);
