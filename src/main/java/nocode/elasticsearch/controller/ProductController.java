@@ -21,7 +21,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping(value = "/key/{id}")
+    @GetMapping(value = "/id/{id}")
     public Product findId(@PathVariable String id) throws IOException {
         return productService.findById(id);
     }
