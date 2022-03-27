@@ -6,3 +6,6 @@ Elasticsearch 8,x Java API Client example
 This example uses:
 * Gradle >= 7.4.1
 * JDK >= 11
+
+It contains the below examples ::
+Todo ...
