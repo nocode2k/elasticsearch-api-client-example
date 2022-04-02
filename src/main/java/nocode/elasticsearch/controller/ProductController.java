@@ -3,6 +3,8 @@ package nocode.elasticsearch.controller;
 import lombok.RequiredArgsConstructor;
 import nocode.elasticsearch.model.Product;
 import nocode.elasticsearch.service.Page;
+import nocode.elasticsearch.service.ProductJsonService;
+import nocode.elasticsearch.service.ProductRestService;
 import nocode.elasticsearch.service.ProductService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,17 +22,28 @@ import java.util.List;
 @RequestMapping("/search")
 public class ProductController {
     private final ProductService productService;
+    private final ProductRestService productRestService;
+    private final ProductJsonService productJsonService;
 
     @GetMapping(value = "/id/{id}")
     public Product findId(@PathVariable String id) throws IOException {
         return productService.findById(id);
     }
 
-    @GetMapping(value = "/q/{query}")
-    public Page<Product> search(@PathVariable String query) throws IOException {
+    @GetMapping(value = "/q1/{query}")
+    public Page<Product> searchType1(@PathVariable String query) throws IOException {
         return productService.search(query);
     }
 
+    @GetMapping(value = "/q2/{query}")
+    public Page<Product> searchType2(@PathVariable String query) throws IOException {
+        return productRestService.search(query);
+    }
+
+    @GetMapping(value = "/q3/{query}")
+    public Page<Product> searchType3(@PathVariable String query) throws IOException {
+        return productJsonService.search(query);
+    }
 
     @PostMapping(value="/save")
     public ResponseEntity<Product> save() throws IOException {

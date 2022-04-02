@@ -32,4 +32,14 @@ public class ElasticsearchConfiguration {
         // And create the API client
         return new ElasticsearchClient(transport);
     }
+
+    @Bean
+    public RestClient elasticsearchRestClient() {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "elastic"));
+        return RestClient.builder(new HttpHost("localhost", 9200, "http"))
+                .setHttpClientConfigCallback(
+                        httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)
+                ).build();
+    }
 }

@@ -20,11 +20,13 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'co.elastic.clients:elasticsearch-java:8.1.0'
+	implementation 'co.elastic.clients:elasticsearch-java:8.1.2'
 	implementation 'jakarta.json:jakarta.json-api:2.0.1'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
 	implementation 'org.glassfish:jakarta.json:2.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'commons-io:commons-io:2.11.0'
+
     compileOnly 'org.projectlombok:lombok:1.18.22'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
