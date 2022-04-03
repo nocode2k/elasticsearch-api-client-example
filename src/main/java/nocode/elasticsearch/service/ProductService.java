@@ -25,7 +25,8 @@ public class ProductService {
     private final ElasticsearchClient elasticsearchClient;
 
     public Product findById(String id) throws IOException {
-        final GetResponse<Product> getResponse = elasticsearchClient.get(builder -> builder.index(indexName).id(id), Product.class);
+        final GetResponse<Product> getResponse
+                = elasticsearchClient.get(builder -> builder.index(indexName).id(id), Product.class);
         Product product =null;
         if(getResponse.found()) {
             product = getResponse.source();
@@ -35,28 +36,12 @@ public class ProductService {
         return product;
     }
 
-    public Page<Product> search(String input) throws IOException {
-        return createPage(createSearchRequest(input, 0, 10), input);
-    }
-
-    public Page<Product> next(Page page) throws IOException {
-        int from = page.getFrom() + page.getSize();
-        final SearchRequest request = createSearchRequest(page.getInput(), from, page.getSize());
-        return createPage(request, page.getInput());
-    }
-
-    private Page<Product> createPage(SearchRequest searchRequest, String input) throws IOException {
+    public List<Product> search(String input) throws IOException {
+        final SearchRequest searchRequest = createSearchRequest(input, 0, 10);
         final SearchResponse<Product> response = elasticsearchClient.search(searchRequest, Product.class);
-        if (response.hits().total().value() == 0) {
-            return Page.EMPTY;
-        }
-        if (response.hits().hits().isEmpty()) {
-            return Page.EMPTY;
-        }
-
         response.hits().hits().forEach(hit -> hit.source().setId(hit.id()));
         final List<Product> products = response.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
-        return new Page(products, input, searchRequest.from(), searchRequest.size());
+        return products;
     }
 
     private SearchRequest createSearchRequest(String input, int from, int size) {

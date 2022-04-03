@@ -2,7 +2,6 @@ package nocode.elasticsearch.controller;
 
 import lombok.RequiredArgsConstructor;
 import nocode.elasticsearch.model.Product;
-import nocode.elasticsearch.service.Page;
 import nocode.elasticsearch.service.ProductJsonService;
 import nocode.elasticsearch.service.ProductRestService;
 import nocode.elasticsearch.service.ProductService;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,28 +25,28 @@ public class ProductController {
     private final ProductRestService productRestService;
     private final ProductJsonService productJsonService;
 
-    @GetMapping(value = "/id/{id}")
-    public Product findId(@PathVariable String id) throws IOException {
-        return productService.findById(id);
+    @GetMapping(value = "/id/{id}", produces = "application/json")
+    public @ResponseBody ResponseEntity<Product> findId(@PathVariable String id) throws IOException {
+        return ResponseEntity.ok().body(productService.findById(id));
     }
 
-    @GetMapping(value = "/q1/{query}")
-    public Page<Product> searchType1(@PathVariable String query) throws IOException {
-        return productService.search(query);
+    @GetMapping(value = "/q1/{query}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<Product>> searchType1(@PathVariable String query) throws IOException {
+        return ResponseEntity.ok().body(productService.search(query));
     }
 
-    @GetMapping(value = "/q2/{query}")
-    public Page<Product> searchType2(@PathVariable String query) throws IOException {
-        return productRestService.search(query);
+    @GetMapping(value = "/q2/{query}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<Map<String, Object>>> searchType2(@PathVariable String query) throws IOException {
+        return ResponseEntity.ok().body(productRestService.search(query));
     }
 
-    @GetMapping(value = "/q3/{query}")
-    public Page<Product> searchType3(@PathVariable String query) throws IOException {
-        return productJsonService.search(query);
+    @GetMapping(value = "/q3/{query}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<Product>> searchType3(@PathVariable String query) throws IOException {
+        return ResponseEntity.ok().body(productJsonService.search(query));
     }
 
-    @PostMapping(value="/save")
-    public ResponseEntity<Product> save() throws IOException {
+    @PostMapping(value="/save", produces = "application/json")
+    public @ResponseBody ResponseEntity<Product> save() throws IOException {
         Product product = new Product();
         List<Product> list = new ArrayList<>();
         for(int i=1; i <= 5; i++) {
